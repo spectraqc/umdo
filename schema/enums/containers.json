@@ -1,0 +1,11 @@
+{
+  "$comment": "Recommended container / wrapper identifiers used across UMDO profiles.",
+  "containers": [
+    { "id": "mxf", "description": "Material Exchange Format (SMPTE 377-1)" },
+    { "id": "mxf_op1a", "description": "MXF Operational Pattern 1a" },
+    { "id": "mov", "description": "QuickTime Movie" },
+    { "id": "mp4", "description": "MPEG-4 Part 14 / ISO BMFF" },
+    { "id": "imf", "description": "Interoperable Master Format package" },
+    { "id": "dcp", "description": "Digital Cinema Package" }
+  ]
+}

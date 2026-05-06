@@ -1,0 +1,188 @@
+{
+  "delivery_paradigm": "file",
+  "inputs": {
+    "constraints": {
+      "native_frame_rate_only": true,
+      "no_upconversion": true,
+      "no_upscaling": true
+    }
+  },
+  "assets": {
+    "video": {
+      "representation": "file",
+      "codec": {
+        "allowed": [
+          "avc_intra_class_100",
+          "prores_422_hq",
+          "prores_422"
+        ]
+      },
+      "container": {
+        "allowed": [
+          "mxf"
+        ]
+      },
+      "bitrate": {
+        "target": 113000000,
+        "mode": "constant"
+      },
+      "resolution": {
+        "allowed": [
+          "1920x1080"
+        ]
+      },
+      "aspect_ratio": {
+        "allowed": [
+          "16:9"
+        ]
+      },
+      "frame_rate": {
+        "mode": "fixed",
+        "allowed": [
+          "25"
+        ],
+        "tolerance": 0.01
+      },
+      "scan_type": [
+        "interlaced"
+      ],
+      "color": {
+        "primaries": [
+          "bt709"
+        ],
+        "transfer": [
+          "bt709"
+        ],
+        "matrix": [
+          "bt709"
+        ],
+        "range": [
+          "limited"
+        ]
+      },
+      "bit_depth": {
+        "allowed": [
+          10
+        ],
+        "min": 10
+      },
+      "chroma_subsampling": [
+        "4:2:2"
+      ],
+      "signal": {
+        "interlace_mode": [
+          "true_interlace"
+        ],
+        "field_order": [
+          "tff"
+        ],
+        "broadcast_system": "PAL/EBU",
+        "mains_frequency_hz": 50
+      },
+      "gop": {
+        "closed_required": true,
+        "max_length": 1
+      }
+    },
+    "audio": {
+      "codec": {
+        "allowed": [
+          "pcm_s24le"
+        ],
+        "disallowed": [
+          "aac",
+          "mp3",
+          "ac3"
+        ]
+      },
+      "sample_rate": [
+        48000
+      ],
+      "bit_depth": {
+        "allowed": [
+          24
+        ],
+        "uniform_required": true
+      },
+      "track_count": {
+        "min": 4,
+        "max": 16
+      },
+      "language": {
+        "mode": "single"
+      },
+      "layout": {
+        "channel_map_required": true,
+        "allowed_layouts": [
+          "L-R",
+          "L-R-C-LFE-LS-RS"
+        ]
+      },
+      "loudness": {
+        "standards": [
+          {
+            "name": "EBU R128",
+            "target": -23.0,
+            "tolerance": 0.5
+          }
+        ],
+        "true_peak_max": -1.0
+      },
+      "sync": {
+        "must_match_video_duration": true
+      }
+    },
+    "metadata": {
+      "required": true,
+      "schemas": [
+        "EBU"
+      ]
+    }
+  },
+  "structure": {
+    "type": "timeline",
+    "timeline": {
+      "timecode_start": "10:00:00:00"
+    }
+  },
+  "packaging": {
+    "type": "MXF_bundle"
+  },
+  "constraints": {
+    "video": {
+      "signal_limits": {
+        "luminance": {
+          "min": 64,
+          "max": 940,
+          "tolerance_percent": 1
+        },
+        "rgb": {
+          "min": 64,
+          "max": 940,
+          "tolerance_percent": 1
+        }
+      }
+    },
+    "timing": {
+      "duration": {
+        "must_match": [
+          "video",
+          "audio"
+        ],
+        "tolerance_ms": 40
+      }
+    }
+  },
+  "id": "svt",
+  "name": "SVT (Sweden) \u2014 Programme Delivery",
+  "governance": {
+    "spec_version": "5.1",
+    "effective_date": "2022-01-01",
+    "supersedes": null,
+    "source": "Technical_Specification_for_the_Delivery_of_Television_Programmes_as_FILES_to_SVT_v5.1.pdf",
+    "jurisdiction": [
+      "SE"
+    ],
+    "notes": "Swedish public broadcaster SVT. EBU R128 loudness, MXF AS-11-style file delivery with ProRes also accepted."
+  }
+}

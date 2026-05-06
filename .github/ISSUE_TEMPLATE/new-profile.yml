@@ -1,0 +1,39 @@
+name: New profile
+description: Encode a public delivery spec as a UMDO profile.
+labels: ["profile"]
+body:
+  - type: input
+    id: brand
+    attributes:
+      label: Brand / organisation
+      description: The originating broadcaster, studio, or platform.
+      placeholder: "BBC, Netflix, Clearcast, ..."
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec name and version
+      placeholder: "BBC iPlayer File Delivery v3.4"
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source URL or document reference
+      description: Must be publicly accessible.
+    validations:
+      required: true
+  - type: input
+    id: filename
+    attributes:
+      label: Proposed filename
+      description: "Convention: brand_subbrand_region_format.json"
+      placeholder: "bbc_iplayer_hd.json"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything unusual?
+      description: Are there fields in this spec UMDO doesn't currently model?

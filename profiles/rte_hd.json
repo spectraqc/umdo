@@ -1,0 +1,194 @@
+{
+  "delivery_paradigm": "file",
+  "inputs": {
+    "constraints": {
+      "native_frame_rate_only": true,
+      "no_upconversion": true,
+      "no_upscaling": true
+    }
+  },
+  "assets": {
+    "video": {
+      "representation": "file",
+      "codec": {
+        "allowed": [
+          "xdcam_hd_422_50"
+        ],
+        "notes": "MPEG-2 Long GOP, Fixed M=3 N=12, 50 Mbps 8-bit. Commercially known as XDCAM HD 422-50."
+      },
+      "container": {
+        "allowed": [
+          "mxf"
+        ],
+        "notes": "MXF OP1-a, Closed/Complete"
+      },
+      "resolution": {
+        "allowed": [
+          "1920x1080"
+        ],
+        "notes": "HD only. SD not accepted."
+      },
+      "aspect_ratio": {
+        "allowed": [
+          "16:9"
+        ],
+        "notes": "16:9 FHA (Full Height Anamorphic)"
+      },
+      "frame_rate": {
+        "mode": "fixed",
+        "allowed": [
+          "25"
+        ],
+        "tolerance": 0.01,
+        "notes": "50i — 25 fps interlaced, 50 interlaced fields per second. Timecode embedded in MXF Timecode Track."
+      },
+      "scan_type": [
+        "interlaced"
+      ],
+      "color": {
+        "primaries": [
+          "bt709"
+        ],
+        "transfer": [
+          "bt709"
+        ],
+        "matrix": [
+          "bt709"
+        ],
+        "range": [
+          "limited"
+        ],
+        "notes": "ITU-R BT.709-5 Part 2. 4:2:2 colour subsampling."
+      },
+      "bit_depth": {
+        "allowed": [
+          8
+        ],
+        "min": 8
+      },
+      "chroma_subsampling": [
+        "4:2:2"
+      ]
+    },
+    "audio": {
+      "codec": {
+        "allowed": [
+          "pcm_s24le"
+        ],
+        "notes": "PCM uncompressed, BWF (Broadcast WAV) wrapper embedded in MXF"
+      },
+      "sample_rate": [
+        48000
+      ],
+      "bit_depth": {
+        "allowed": [
+          24
+        ],
+        "uniform_required": true
+      },
+      "track_count": {
+        "max": 8,
+        "notes": "1 stream, up to 8 tracks. Ch1-2: programme audio (stereo). Ch3-4 (optional): M&E or Dolby E. Ch5-6 (optional): Audio Description premixed with programme audio. Unused tracks carry silence."
+      },
+      "language": {
+        "mode": "single"
+      },
+      "layout": {
+        "channel_map_required": true,
+        "allowed_layouts": [
+          "L-R"
+        ],
+        "notes": "Follow EBU Recommendation R123 Audio Track Allocation for File Exchange. General audio in stereo; mono recorded phase-compatible on Ch1 and Ch2."
+      },
+      "loudness": {
+        "standards": [
+          {
+            "name": "EBU R128",
+            "target": -23.0,
+            "tolerance": 1.0,
+            "jurisdiction": "IE"
+          }
+        ],
+        "notes": "Follow EBU R128 guidelines for loudness normalisation and permitted maximum level of audio signals."
+      },
+      "sync": {
+        "must_match_video_duration": true,
+        "av_sync_max_ms": 5
+      }
+    },
+    "timed_text": {
+      "subtitles": {
+        "format": "ebu_stl",
+        "notes": "RTÉ broadcasts closed captions in EBU .stl format. For English subtitles of foreign language programmes, subtitles must be burnt-in onscreen against a veiled background using Arial Regular font size 58px. Script and running order to subtitle@rte.ie at time of master file delivery."
+      }
+    },
+    "metadata": {
+      "required": true,
+      "schemas": [
+        "custom"
+      ],
+      "notes": "MXF Timecode Track required. File naming: MI + 9 digits (pre-assigned Media ID) + .mxf, e.g. MI000001234.mxf."
+    }
+  },
+  "structure": {
+    "type": "timeline",
+    "timeline": {
+      "timecode_start": "10:00:00:00",
+      "timecode_continuous": true,
+      "programme_layout": {
+        "lineup_tone_start": "09:58:00:00",
+        "bars_start": "09:59:30:00",
+        "bars_duration_seconds": 27,
+        "clock_start": "09:59:30:00",
+        "sync_plop_window": "09:59:57:06 to 09:59:57:07",
+        "black_start": "09:59:57:08",
+        "programme_start": "10:00:00:00"
+      },
+      "notes": "Lineup tone at 09:58:00:00 (90 sec). EBU Bars (100/0/75/0 or 100/0/100/0) + countdown clock 09:59:30:00. Optional sync plop at 09:59:57:06–07: 2 frames peak white + 1 frame 1kHz tone on all tracks at -18 dBFS, audio within ±5 ms of video flash. Black at 09:59:57:08 to 10:00:00:00. Programme ends with freeze or living hold after end of part; fade/cut to silence by end of programme."
+    }
+  },
+  "packaging": {
+    "type": "none",
+    "delivery": "aspera_faspex",
+    "notes": "Delivery via Aspera FASPEX. File named with pre-assigned RTÉ Media ID: MI + 9 digits + .mxf. One programme per file."
+  },
+  "constraints": {
+    "video": {
+      "signal_limits": {
+        "luminance": {
+          "min": 16,
+          "max": 235,
+          "tolerance_note": "EBU R103: RGB -5% to 105% (-35 to 735 mV); luminance -1% to 103%. Errors registered only where out-of-gamut signals exceed 1% of picture area."
+        },
+        "rgb": {
+          "min": 16,
+          "max": 235
+        }
+      },
+      "pse_test_required": true,
+      "pse_standard": "ITU-R BT.1702",
+      "notes": "Digital video levels per ITU-R BT.709-5 Part 2. 8-bit system: black = 16, white = 235 (64/940 in 10-bit equivalent)."
+    },
+    "timing": {
+      "duration": {
+        "must_match": [
+          "video",
+          "audio"
+        ],
+        "tolerance_ms": 40
+      }
+    }
+  },
+  "id": "rte_hd",
+  "name": "RTÉ — IPU Content Delivery Specification (HD)",
+  "governance": {
+    "spec_version": "1",
+    "effective_date": "2026-03-20",
+    "supersedes": null,
+    "source": "RTÉ IPU Content Delivery Specification V1 March 20th 2026",
+    "jurisdiction": [
+      "IE"
+    ],
+    "notes": "RTÉ HD broadcast delivery. Video: MPEG-2 Long GOP (XDCAM HD 422-50), MXF OP1-a Closed/Complete, 1920x1080i/25, 4:2:2, BT.709, 8-bit limited (16–235), 50 Mbps. Audio: PCM 24-bit 48kHz BWF, up to 8 tracks (Ch1-2 programme stereo; Ch3-4 optional M&E or Dolby E; Ch5-6 optional AD premixed); EBU R128 -23 LUFS. Subtitles: EBU STL; foreign language content burnt-in Arial Regular 58px. Timecode: 10:00:00:00 start, MXF Timecode Track. PSE test required per ITU-R BT.1702. Delivery via Aspera FASPEX; filename: MI + 9-digit Media ID + .mxf."
+  }
+}

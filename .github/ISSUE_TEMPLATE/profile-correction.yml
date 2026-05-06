@@ -1,0 +1,25 @@
+name: Profile correction
+description: Report or fix an inaccuracy in an existing profile.
+labels: ["correction"]
+body:
+  - type: input
+    id: profile
+    attributes:
+      label: Which profile?
+      placeholder: "profiles/clearcast_commercials.json"
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What's wrong?
+      description: Describe the inaccuracy.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Authoritative source
+      description: URL or document reference proving the correction.
+    validations:
+      required: true

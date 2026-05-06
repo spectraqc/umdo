@@ -1,0 +1,186 @@
+{
+  "delivery_paradigm": "file",
+  "inputs": {
+    "constraints": {
+      "native_frame_rate_only": true,
+      "no_upconversion": true,
+      "no_upscaling": true
+    }
+  },
+  "assets": {
+    "video": {
+      "representation": "file",
+      "codec": {
+        "allowed": [
+          "avc_intra_class_100"
+        ]
+      },
+      "container": {
+        "allowed": [
+          "mxf"
+        ]
+      },
+      "bitrate": {
+        "target": 113000000,
+        "mode": "constant"
+      },
+      "resolution": {
+        "allowed": [
+          "1920x1080"
+        ]
+      },
+      "aspect_ratio": {
+        "allowed": [
+          "16:9"
+        ]
+      },
+      "frame_rate": {
+        "mode": "fixed",
+        "allowed": [
+          "25"
+        ],
+        "tolerance": 0.01
+      },
+      "scan_type": [
+        "interlaced"
+      ],
+      "color": {
+        "primaries": [
+          "bt709"
+        ],
+        "transfer": [
+          "bt709"
+        ],
+        "matrix": [
+          "bt709"
+        ],
+        "range": [
+          "limited"
+        ]
+      },
+      "bit_depth": {
+        "allowed": [
+          10
+        ],
+        "min": 10
+      },
+      "chroma_subsampling": [
+        "4:2:2"
+      ],
+      "signal": {
+        "interlace_mode": [
+          "true_interlace"
+        ],
+        "field_order": [
+          "tff"
+        ],
+        "broadcast_system": "PAL/EBU",
+        "mains_frequency_hz": 50
+      },
+      "gop": {
+        "closed_required": true,
+        "max_length": 1
+      }
+    },
+    "audio": {
+      "codec": {
+        "allowed": [
+          "pcm_s24le"
+        ],
+        "disallowed": [
+          "aac",
+          "mp3",
+          "ac3"
+        ]
+      },
+      "sample_rate": [
+        48000
+      ],
+      "bit_depth": {
+        "allowed": [
+          24
+        ],
+        "uniform_required": true
+      },
+      "track_count": {
+        "min": 4,
+        "max": 16
+      },
+      "language": {
+        "mode": "multi"
+      },
+      "layout": {
+        "channel_map_required": true,
+        "allowed_layouts": [
+          "L-R",
+          "L-R-C-LFE-LS-RS"
+        ]
+      },
+      "loudness": {
+        "standards": [
+          {
+            "name": "EBU R128",
+            "target": -23.0,
+            "tolerance": 0.5
+          }
+        ],
+        "true_peak_max": -1.0
+      },
+      "sync": {
+        "must_match_video_duration": true
+      }
+    },
+    "metadata": {
+      "required": true,
+      "schemas": [
+        "AS-11 UK DPP"
+      ]
+    }
+  },
+  "structure": {
+    "type": "timeline",
+    "timeline": {
+      "timecode_start": "10:00:00:00"
+    }
+  },
+  "packaging": {
+    "type": "MXF_bundle"
+  },
+  "constraints": {
+    "video": {
+      "signal_limits": {
+        "luminance": {
+          "min": 64,
+          "max": 940,
+          "tolerance_percent": 1
+        },
+        "rgb": {
+          "min": 64,
+          "max": 940,
+          "tolerance_percent": 1
+        }
+      }
+    },
+    "timing": {
+      "duration": {
+        "must_match": [
+          "video",
+          "audio"
+        ],
+        "tolerance_ms": 40
+      }
+    }
+  },
+  "id": "tg4",
+  "name": "TG4 \u2014 Technical Delivery Standards",
+  "governance": {
+    "spec_version": "1.0",
+    "effective_date": "2021-01-01",
+    "supersedes": null,
+    "source": "TechnicalDeliveryStandardsTG4.pdf \u2014 based on UK DPP File spec",
+    "jurisdiction": [
+      "IE"
+    ],
+    "notes": "TG4 (Irish-language broadcaster) follows the UK DPP HD AS-11 envelope with Irish-language tracks expected."
+  }
+}

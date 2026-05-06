@@ -1,0 +1,826 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://umdo.org/schema/0.7.0/umdo.schema.json",
+  "title": "Universal Media Delivery Ontology",
+  "description": "Machine-readable schema for broadcast, OTT, cinema and ad-delivery technical specifications. UMDO is extension-friendly: every object accepts additional properties so vendors and broadcasters can add their own fields and propose them upstream.",
+  "type": "object",
+  "$comment": "UMDO 0.7.0 — schema version is independent of any individual profile's spec_version (governance.spec_version).",
+  "required": ["id", "name", "delivery_paradigm"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable machine identifier for the spec. Convention: brand_subbrand_region_format (subbrand and region optional). Lowercase ASCII, underscores, digits.",
+      "pattern": "^[a-z0-9][a-z0-9_]*[a-z0-9]$",
+      "minLength": 2,
+      "maxLength": 128
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable spec name including originating organisation."
+    },
+    "governance": { "$ref": "#/$defs/governance" },
+    "delivery_paradigm": { "$ref": "#/$defs/delivery_paradigm" },
+    "inputs": { "$ref": "#/$defs/inputs" },
+    "assets": { "$ref": "#/$defs/assets" },
+    "structure": { "$ref": "#/$defs/structure" },
+    "packaging": { "$ref": "#/$defs/packaging" },
+    "variants": { "$ref": "#/$defs/variants" },
+    "constraints": { "$ref": "#/$defs/constraints" },
+    "validation": { "$ref": "#/$defs/validation" },
+    "workflow": { "$ref": "#/$defs/workflow" },
+    "compliance": { "$ref": "#/$defs/compliance" },
+    "delivery": { "$ref": "#/$defs/delivery" },
+    "exhibition": { "$ref": "#/$defs/exhibition" },
+    "security": { "$ref": "#/$defs/security" },
+    "regional_overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["region"],
+        "properties": {
+          "region": { "type": "string" },
+          "overrides": { "type": "object" }
+        }
+      }
+    },
+    "ad_tech": { "$ref": "#/$defs/ad_tech" },
+    "economics": { "$ref": "#/$defs/economics" }
+  },
+
+  "$defs": {
+
+    "governance": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "spec_version": { "type": "string" },
+        "effective_date": { "type": "string", "format": "date" },
+        "supersedes": { "type": ["string", "null"] },
+        "source": { "type": "string" },
+        "jurisdiction": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "ISO 3166-1 alpha-2 country code, an EU/region code, or 'global'."
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "delivery_paradigm": {
+      "description": "High-level delivery model. Open enum: known values are listed but custom values are accepted for new paradigms.",
+      "type": "string",
+      "examples": ["file", "package", "ad", "cinema", "live", "imf", "dcp"]
+    },
+
+    "inputs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "accepted_sources": { "type": "array", "items": { "type": "string" } },
+        "rejected_sources": { "type": "array", "items": { "type": "string" } },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "native_frame_rate_only": { "type": "boolean" },
+            "native_aspect_ratio_only": { "type": "boolean" },
+            "no_upconversion": { "type": "boolean" },
+            "no_upscaling": { "type": "boolean" },
+            "no_pulldown_flags": { "type": "boolean" },
+            "long_play_only": { "type": "boolean" },
+            "generation_loss_max": { "type": "number" },
+            "notes": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "assets": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "video": { "$ref": "#/$defs/asset_video" },
+        "audio": { "$ref": "#/$defs/asset_audio" },
+        "timed_text": { "$ref": "#/$defs/asset_timed_text" },
+        "metadata": { "$ref": "#/$defs/asset_metadata" },
+        "ancillary": { "$ref": "#/$defs/asset_ancillary" }
+      }
+    },
+
+    "asset_video": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "representation": {
+          "type": "string",
+          "examples": ["file", "image_sequence", "imf_track_file"]
+        },
+        "codec": { "$ref": "#/$defs/allowed_disallowed_strings" },
+        "container": { "$ref": "#/$defs/allowed_disallowed_strings" },
+        "bitrate": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" },
+            "target": { "type": "number" },
+            "mode": { "type": "string", "enum": ["constant", "variable", "unconstrained"] }
+          }
+        },
+        "resolution": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "min": { "type": "string" },
+            "max": { "type": "string" },
+            "allowed": { "type": "array", "items": { "type": "string" } },
+            "notes": { "type": "string" }
+          }
+        },
+        "aspect_ratio": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "allowed": { "type": "array", "items": { "type": "string" } },
+            "tolerance_percent": { "type": "number" }
+          }
+        },
+        "frame_rate": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "mode": { "type": "string", "enum": ["fixed", "native_only", "allowed_list"] },
+            "allowed": {
+              "type": "array",
+              "items": { "type": ["string", "number"] }
+            },
+            "tolerance": { "type": "number" },
+            "notes": { "type": "string" }
+          }
+        },
+        "scan_type": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["progressive", "interlaced", "psf"] }
+        },
+        "color": { "$ref": "#/$defs/video_color" },
+        "bit_depth": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "allowed": { "type": "array", "items": { "type": "integer" } },
+            "min": { "type": "integer" },
+            "notes": { "type": "string" }
+          }
+        },
+        "chroma_subsampling": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["4:2:0", "4:2:2", "4:4:4", "RGB"] }
+        },
+        "signal": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "interlace_mode": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["psf", "true_interlace"] }
+            },
+            "field_order": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["tff", "bff"] }
+            },
+            "broadcast_system": { "type": "string" },
+            "mains_frequency_hz": { "type": "number" }
+          }
+        },
+        "gop": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "GOP structure constraints. Promoted to a first-class field in 0.7.0 — closed_required is heavily used by broadcast specs.",
+          "properties": {
+            "closed_required": { "type": "boolean" },
+            "max_length": { "type": "integer", "minimum": 1 },
+            "notes": { "type": "string" }
+          }
+        },
+        "timecode": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Embedded timecode track requirements. Promoted to a first-class field in 0.7.0.",
+          "properties": {
+            "ltc_required": { "type": "boolean" },
+            "vitc_required": { "type": "boolean" },
+            "notes": { "type": "string" }
+          }
+        },
+        "safe_area": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "title_safe_required": { "type": "boolean" },
+            "action_safe_required": { "type": "boolean" },
+            "title_safe_percent": { "type": ["number", "null"] },
+            "action_safe_percent": { "type": ["number", "null"] }
+          }
+        }
+      }
+    },
+
+    "video_color": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "primaries": { "type": "array", "items": { "type": "string" } },
+        "transfer": { "type": "array", "items": { "type": "string" } },
+        "matrix": { "type": "array", "items": { "type": "string" } },
+        "range": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["full", "limited"] }
+        },
+        "hdr": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "formats": { "type": "array", "items": { "type": "string" } },
+            "disallowed": { "type": "array", "items": { "type": "string" } },
+            "metadata_required": { "type": "boolean" },
+            "fallback_required": { "type": "boolean" }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "asset_audio": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "codec": { "$ref": "#/$defs/allowed_disallowed_strings" },
+        "sample_rate": { "type": "array", "items": { "type": "integer" } },
+        "bit_depth": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "allowed": { "type": "array", "items": { "type": "integer" } },
+            "min": { "type": "integer" },
+            "uniform_required": { "type": "boolean" },
+            "notes": { "type": "string" }
+          }
+        },
+        "bitrate": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          }
+        },
+        "track_count": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "min": { "type": "integer", "minimum": 0 },
+            "max": { "type": "integer", "minimum": 0 },
+            "exact": { "type": "integer", "minimum": 0 },
+            "notes": { "type": "string" }
+          }
+        },
+        "language": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "mode": { "type": "string", "enum": ["single", "multi"] },
+            "per_file_constraint": {
+              "type": "string",
+              "enum": ["single_only", "multi_allowed"]
+            }
+          }
+        },
+        "content_types": { "$ref": "#/$defs/allowed_disallowed_strings" },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string" },
+              "channels": { "type": "integer" },
+              "language": { "type": "string" },
+              "content": { "type": "string" },
+              "requires": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "layout": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "channel_map_required": { "type": "boolean" },
+            "allowed_layouts": { "type": "array", "items": { "type": "string" } },
+            "tracks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "track": { "type": "integer" },
+                  "role": { "type": "string" },
+                  "language": { "type": "string" }
+                }
+              }
+            },
+            "notes": { "type": "string" }
+          }
+        },
+        "loudness": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "standards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "target": { "type": ["number", "null"] },
+                  "tolerance": { "type": ["number", "null"] },
+                  "jurisdiction": { "type": "string" }
+                }
+              }
+            },
+            "true_peak_max": {
+              "type": ["number", "null"],
+              "description": "True-peak ceiling in dBTP. null means no ceiling enforced."
+            },
+            "notes": { "type": "string" }
+          }
+        },
+        "sync": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "max_offset_ms": { "type": "number" },
+            "must_match_video_duration": { "type": "boolean" }
+          }
+        }
+      }
+    },
+
+    "asset_timed_text": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "required": { "type": "boolean" },
+        "allowed": { "type": "boolean" },
+        "formats": { "$ref": "#/$defs/allowed_disallowed_strings" },
+        "language_mode": { "type": "string", "enum": ["single", "multi"] },
+        "constraints": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "max_lines": { "type": "integer" },
+            "max_chars_per_line": { "type": "integer" },
+            "reading_speed_cps": { "type": "number" }
+          }
+        },
+        "burn_in": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "allowed": { "type": "boolean" },
+            "exceptions": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+
+    "asset_metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "required": { "type": "boolean" },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "type": { "type": "string" },
+              "required": { "type": "boolean" },
+              "constraints": { "type": "object" }
+            }
+          }
+        },
+        "schemas": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "asset_ancillary": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "images": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "min_count": { "type": "integer" },
+            "types": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "documents": { "type": "array", "items": { "type": "string" } },
+        "artwork": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+
+    "structure": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": { "type": "string", "enum": ["flat", "timeline", "reel", "graph"] },
+        "timeline": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "timecode_start": {
+              "type": "string",
+              "description": "SMPTE timecode HH:MM:SS:FF (or HH:MM:SS;FF for drop-frame). Promoted from a sometimes-missing field to first-class in 0.7.0.",
+              "pattern": "^\\d{2}:\\d{2}:\\d{2}[:;]\\d{2}$"
+            },
+            "timecode_continuous": { "type": "boolean" },
+            "programme_layout": { "type": "object", "additionalProperties": true },
+            "segments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "type": { "type": "string" },
+                  "duration": { "type": "string" },
+                  "start": { "type": "string" },
+                  "constraints": { "type": "object" }
+                }
+              }
+            },
+            "notes": { "type": "string" }
+          }
+        },
+        "markers": { "type": "object", "additionalProperties": true }
+      }
+    },
+
+    "packaging": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "type": { "type": "string", "examples": ["none", "IMF", "DCP", "MXF_bundle"] },
+        "delivery": { "type": "string" },
+        "components": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "manifests": { "type": "array", "items": { "type": "string" } },
+            "track_files": { "type": "array", "items": { "type": "string" } },
+            "playlists": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "constraints": { "type": "object", "additionalProperties": true },
+        "naming": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "convention": { "type": "string" },
+            "pattern": { "type": "string" },
+            "example": { "type": "string" },
+            "semantic_fields": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "variants": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "multi_language": { "type": "boolean" },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string" },
+              "constraints": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+
+    "constraints": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "video": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "signal_limits": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "luminance": { "$ref": "#/$defs/signal_limit" },
+                "rgb": { "$ref": "#/$defs/signal_limit" }
+              }
+            },
+            "pse_test_required": { "type": "boolean" },
+            "pse_standard": { "type": "string" }
+          }
+        },
+        "audio": { "type": "object", "additionalProperties": true },
+        "timing": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "duration": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "must_match": { "type": "array", "items": { "type": "string" } },
+                "tolerance_ms": { "type": "number" }
+              }
+            }
+          }
+        },
+        "content": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "uncensored": { "type": "boolean" },
+            "pse_testing_required": { "type": "boolean" },
+            "forbidden_elements": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "subtitle_rules": { "type": "object", "additionalProperties": true },
+        "cross_asset": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "rule": { "type": "string" },
+              "expression": { "type": "string" }
+            }
+          }
+        },
+        "conditional": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "if": { "type": "string" },
+              "then": { "type": "string" }
+            }
+          }
+        },
+        "subjective": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "type": { "type": "string" },
+              "evaluation": { "type": "string" },
+              "scale": { "type": "string" },
+              "minimum": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+
+    "signal_limit": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "min": { "type": ["number", "null"] },
+        "max": { "type": ["number", "null"] },
+        "tolerance_percent": { "type": "number" },
+        "tolerance_note": { "type": "string" }
+      }
+    },
+
+    "validation": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string", "enum": ["math", "equality", "range", "tolerance", "logical"] },
+              "expression": { "type": "string" },
+              "severity": { "type": "string", "enum": ["error", "warning"] },
+              "applies_if": { "type": "string" }
+            }
+          }
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "name": { "type": "string" },
+              "rules": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+
+    "workflow": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "qc_required": { "type": "boolean" },
+        "automated_qc": { "type": "boolean" },
+        "human_qc": { "type": "boolean" },
+        "qc_tools": { "type": "array", "items": { "type": "string" } },
+        "preclearance": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "required": { "type": "boolean" },
+            "lead_time_days": { "type": ["integer", "null"] }
+          }
+        },
+        "approval": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "entities": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "test_delivery": { "type": "boolean" }
+      }
+    },
+
+    "compliance": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "traffic": { "type": "object", "additionalProperties": true },
+        "deadlines": { "type": "object", "additionalProperties": true },
+        "regulatory": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "captions_required": { "type": "boolean" },
+            "audio_description_required": { "type": "boolean" },
+            "bodies": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": { "type": "string" },
+                  "jurisdiction": { "type": "string" },
+                  "codes": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "region": { "type": "string" },
+              "role": { "type": "string" },
+              "email": { "type": "string", "format": "email" },
+              "names": { "type": "array", "items": { "type": "string" } },
+              "notes": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "delivery": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "mode": { "type": "string" },
+        "transport": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "methods": { "type": "array", "items": { "type": "string" } },
+            "providers": { "type": "array", "items": { "type": "string" } },
+            "contact_required_before_upload": { "type": "boolean" }
+          }
+        },
+        "protocol": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "type": { "type": "string" },
+            "versions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "allowed_channels": { "type": "array", "items": { "type": "string" } },
+        "disallowed_channels": { "type": "array", "items": { "type": "string" } },
+        "topology": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "signal_path_required": { "type": "boolean" },
+            "codec_map_required": { "type": "boolean" },
+            "redundancy": { "type": "string", "enum": ["none", "active-passive", "active-active"] }
+          }
+        }
+      }
+    },
+
+    "exhibition": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "environment": { "type": "string", "examples": ["broadcast", "ott", "cinema", "mobile"] },
+        "requirements": { "type": "object", "additionalProperties": true }
+      }
+    },
+
+    "security": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "encryption": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "type": { "type": "string" },
+            "key_delivery": { "type": "string" },
+            "validity_window": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "start": { "type": "string", "format": "date-time" },
+                "end": { "type": "string", "format": "date-time" }
+              }
+            }
+          }
+        },
+        "drm": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "type": { "type": "string", "examples": ["Widevine", "PlayReady", "FairPlay"] }
+          }
+        }
+      }
+    },
+
+    "ad_tech": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "delivery": { "type": "object", "additionalProperties": true },
+        "measurement": { "type": "object", "additionalProperties": true }
+      }
+    },
+
+    "economics": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "cost_model": { "type": "object", "additionalProperties": true },
+        "profit_protection": { "type": "object", "additionalProperties": true }
+      }
+    },
+
+    "allowed_disallowed_strings": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "allowed": { "type": "array", "items": { "type": "string" } },
+        "disallowed": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

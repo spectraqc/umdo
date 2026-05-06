@@ -1,0 +1,71 @@
+{
+  "id": "example_broadcaster_hd",
+  "name": "Example Broadcaster — HD Programme Delivery",
+  "delivery_paradigm": "file",
+  "governance": {
+    "spec_version": "1.0",
+    "effective_date": "2026-01-01",
+    "source": "Example Broadcaster Technical Delivery Standards 2026",
+    "jurisdiction": ["GB"],
+    "notes": "Minimal example. Real specs typically include constraints, structure, packaging, and workflow sections."
+  },
+  "assets": {
+    "video": {
+      "codec": {
+        "allowed": ["avc_intra_class_100", "prores_422_hq"]
+      },
+      "container": {
+        "allowed": ["mxf"]
+      },
+      "resolution": {
+        "allowed": ["1920x1080"]
+      },
+      "frame_rate": {
+        "mode": "fixed",
+        "allowed": ["25"]
+      },
+      "scan_type": ["interlaced"],
+      "color": {
+        "primaries": ["bt709"],
+        "transfer": ["bt709"],
+        "matrix": ["bt709"],
+        "range": ["limited"]
+      },
+      "bit_depth": { "allowed": [10] },
+      "chroma_subsampling": ["4:2:2"],
+      "gop": {
+        "closed_required": true,
+        "max_length": 1
+      },
+      "timecode": {
+        "ltc_required": true,
+        "vitc_required": false
+      }
+    },
+    "audio": {
+      "codec": { "allowed": ["pcm_s24le"] },
+      "sample_rate": [48000],
+      "bit_depth": { "allowed": [24] },
+      "track_count": { "min": 4, "max": 16 },
+      "loudness": {
+        "standards": [
+          { "name": "EBU R128", "target": -23.0, "tolerance": 0.5 }
+        ],
+        "true_peak_max": -1.0
+      }
+    }
+  },
+  "structure": {
+    "type": "timeline",
+    "timeline": {
+      "timecode_start": "10:00:00:00"
+    }
+  },
+  "constraints": {
+    "video": {
+      "signal_limits": {
+        "luminance": { "min": 64, "max": 940, "tolerance_percent": 1 }
+      }
+    }
+  }
+}

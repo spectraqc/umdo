@@ -1,0 +1,36 @@
+name: Schema change proposal
+description: Propose adding, modifying, or removing a UMDO schema field.
+labels: ["schema"]
+body:
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Which delivery spec needs this?
+      description: Cite at least one publicly available delivery spec that requires the field.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed shape
+      description: Where in the schema should it live? What is the type? Constraints?
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Why can't existing fields represent this?
+      description: Has anyone modelled this as an extension field today?
+    validations:
+      required: true
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Migration impact
+      options:
+        - "None — purely additive (minor bump)"
+        - "Loosens an existing constraint (minor bump)"
+        - "Breaks existing profiles (major bump)"
+    validations:
+      required: true

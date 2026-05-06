@@ -1,0 +1,19 @@
+{
+  "$comment": "Recommended colour identifiers used in assets.video.color.{primaries,transfer,matrix}.",
+  "primaries": [
+    { "id": "bt709", "description": "ITU-R BT.709 (HD)" },
+    { "id": "bt2020", "description": "ITU-R BT.2020 (UHD / HDR)" },
+    { "id": "p3_d65", "description": "DCI-P3 with D65 white point" },
+    { "id": "smpte_c", "description": "SMPTE-C (SD NTSC)" }
+  ],
+  "transfer": [
+    { "id": "bt709", "description": "ITU-R BT.709 / BT.1886 (SDR HD)" },
+    { "id": "smpte2084", "description": "SMPTE ST 2084 / PQ (HDR10, Dolby Vision)" },
+    { "id": "hlg", "description": "Hybrid Log-Gamma (ITU-R BT.2100)" }
+  ],
+  "matrix": [
+    { "id": "bt709", "description": "ITU-R BT.709 colour matrix coefficients" },
+    { "id": "bt2020_ncl", "description": "ITU-R BT.2020 non-constant luminance" },
+    { "id": "bt2020_cl", "description": "ITU-R BT.2020 constant luminance" }
+  ]
+}

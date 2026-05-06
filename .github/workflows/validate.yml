@@ -1,0 +1,28 @@
+name: Validate profiles
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install jsonschema
+      - name: Validate schema syntax
+        run: |
+          python - <<'PY'
+          import json
+          from jsonschema import Draft202012Validator
+          schema = json.load(open("schema/umdo.schema.json"))
+          Draft202012Validator.check_schema(schema)
+          print("schema is a valid Draft 2020-12 JSON Schema")
+          PY
+      - name: Validate all profiles
+        run: python tools/validate.py
