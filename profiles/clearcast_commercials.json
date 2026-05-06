@@ -1,0 +1,187 @@
+{
+  "delivery_paradigm": "file",
+  "inputs": {
+    "constraints": {
+      "native_frame_rate_only": true,
+      "no_upconversion": true,
+      "no_upscaling": true
+    }
+  },
+  "assets": {
+    "video": {
+      "representation": "file",
+      "codec": {
+        "allowed": [
+          "xdcam_hd_422_50",
+          "prores_422_hq",
+          "dnxhd",
+          "avc_intra_100"
+        ],
+        "notes": "XDCAM HD 422 50 Mbps (MPEG-2 4:2:2); ProRes 422 HQ; DNxHD (VC-3 HD); AVC-Intra Class 100. Rough cut reviews additionally accepted as H.264 MP4 at 15 Mbps."
+      },
+      "container": {
+        "allowed": [
+          "mxf",
+          "mov"
+        ],
+        "notes": "MXF OP-1a for XDCAM, DNxHD, AVC-Intra, and ProRes. MOV (QuickTime) also accepted for ProRes 422 HQ. MP4 accepted for rough cuts only."
+      },
+      "resolution": {
+        "allowed": [
+          "1920x1080"
+        ],
+        "notes": "HD 1080 only."
+      },
+      "aspect_ratio": {
+        "allowed": [
+          "16:9"
+        ]
+      },
+      "frame_rate": {
+        "mode": "fixed",
+        "allowed": [
+          "25"
+        ],
+        "tolerance": 0.01,
+        "notes": "25 fps interlaced (50i). NTSC frame rates not accepted."
+      },
+      "scan_type": [
+        "interlaced"
+      ],
+      "color": {
+        "primaries": [
+          "bt709"
+        ],
+        "transfer": [
+          "bt709"
+        ],
+        "matrix": [
+          "bt709"
+        ],
+        "range": [
+          "limited"
+        ],
+        "notes": "ITU-R BT.709 colour space. EBU R103 RGB gamut (-5% to 105%). Signal levels: 16–235 (8-bit) / 64–940 (10-bit)."
+      },
+      "bit_depth": {
+        "allowed": [
+          8,
+          10
+        ],
+        "min": 8,
+        "notes": "XDCAM 50 and DNxHD: 8-bit. ProRes 422 HQ and AVC-Intra Class 100: 10-bit."
+      },
+      "chroma_subsampling": [
+        "4:2:2"
+      ]
+    },
+    "audio": {
+      "codec": {
+        "allowed": [
+          "pcm_s16le",
+          "pcm_s24le"
+        ],
+        "notes": "PCM uncompressed required for all TVC formats. AAC accepted for rough cuts only."
+      },
+      "sample_rate": [
+        48000
+      ],
+      "bit_depth": {
+        "min": 16,
+        "notes": "Minimum 16-bit for ProRes 422 HQ, DNxHD, and AVC-Intra Class 100. Minimum 24-bit for XDCAM 50."
+      },
+      "track_count": {
+        "min": 2,
+        "notes": "Programme audio (stereo) must be on channels 1 and 2. Clearcast Audio QC verifies stereo playback on Ch1 and Ch2."
+      },
+      "layout": {
+        "channel_map_required": true,
+        "allowed_layouts": [
+          "L-R"
+        ],
+        "notes": "Ch1 Left, Ch2 Right. Six frames of audio silence required at head and tail of the material."
+      },
+      "loudness": {
+        "standards": [
+          {
+            "name": "EBU R128",
+            "target": -23.0,
+            "tolerance": 1.0,
+            "jurisdiction": "GB"
+          }
+        ],
+        "true_peak_max": -1.0,
+        "notes": "EBU R128 integrated loudness -23 LUFS. True peak maximum -1 dBTP. Phase coherence: mean phase must not be below -0.95."
+      },
+      "sync": {
+        "must_match_video_duration": true
+      }
+    },
+    "metadata": {
+      "required": true,
+      "notes": "Clock number on the 10-second slate must exactly match the clock number in Clearcast Library submission metadata. IN-point (SOM at 10:00:00:00) and Duration of Essence must be supplied as delivery metadata."
+    }
+  },
+  "structure": {
+    "type": "timeline",
+    "timeline": {
+      "timecode_start": "10:00:00:00",
+      "timecode_continuous": true,
+      "programme_layout": {
+        "clock_duration_seconds": 10,
+        "programme_start": "10:00:00:00",
+        "audio_silence_frames_head": 6,
+        "audio_silence_frames_tail": 6,
+        "end_freeze_options_seconds": [
+          0,
+          5
+        ]
+      },
+      "notes": "SOM at 10:00:00:00 as specified in the MXF Material Package timecode track. A 10-second clock slate precedes the SOM. Vision may fade up from black at 10:00:00:00. Six frames of PCM audio silence at head and tail. End of material: either a completely still 5-second hold on vision (no living freezes or animations) or a 0-second freeze. Duration of Essence in delivery metadata does not include the 5-second end hold. Total file length: Duration + 10s (slate) + 5s (freeze) or Duration + 10s (slate, 0-second freeze option)."
+    }
+  },
+  "packaging": {
+    "type": "none",
+    "delivery": "clearcast_library_portal",
+    "notes": "Upload via the Clearcast Library portal. Material passes through a chronological QC pipeline: Upload Format QC → Video Duration QC → Audio QC → Subtitle QC → Slate QC → Vidchecker QC."
+  },
+  "constraints": {
+    "video": {
+      "signal_limits": {
+        "luminance": {
+          "min": 16,
+          "max": 235,
+          "tolerance_note": "EBU R103: RGB gamut must not exceed -5% to 105% of nominal range. 8-bit: black=16, white=235."
+        },
+        "rgb": {
+          "min": 16,
+          "max": 235
+        }
+      },
+      "pse_test_required": true,
+      "pse_standard": "ITU-R BT.1702"
+    },
+    "timing": {
+      "duration": {
+        "must_match": [
+          "video",
+          "audio"
+        ],
+        "tolerance_ms": 40
+      }
+    }
+  },
+  "id": "clearcast_commercials",
+  "name": "Clearcast — UK/Ireland Commercial Delivery Specification",
+  "governance": {
+    "spec_version": "1.6",
+    "effective_date": "2024-01-01",
+    "supersedes": null,
+    "source": "Clearcast Library Technical Specification Guide v1.6",
+    "jurisdiction": [
+      "GB",
+      "IE"
+    ],
+    "notes": "Clearcast is the UK/Ireland broadcast advertising clearance body. All UK/Ireland TV commercials must pass Clearcast QC before transmission. TVC delivery formats: XDCAM HD 422-50 (MXF OP-1a, 8-bit, 50 Mbps); ProRes 422 HQ (MXF OP-1a or MOV, 10-bit, 114 Mbps); DNxHD / VC-3 HD (MXF OP-1a, 8-bit); AVC-Intra Class 100 (MXF OP-1a, 10-bit, 114 Mbps). All TVCs: 1920x1080i/25, 4:2:2, BT.709, limited range. Audio: PCM stereo Ch1+2, 48 kHz, min 16-bit (24-bit for XDCAM); EBU R128 -23 LUFS; true peak -1 dBTP; mean phase ≥ -0.95. Timecode: SOM 10:00:00:00 in MXF Material Package timecode track; 10-second clock slate before SOM; 6 frames audio silence at head and tail; end freeze 5 seconds or 0 seconds. PSE test: ITU-R BT.1702. RGB gamut: EBU R103. Rough cuts additionally accepted as H.264 MP4 (15 Mbps, AAC audio, interlaced or progressive)."
+  }
+}
