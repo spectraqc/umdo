@@ -1,0 +1,239 @@
+{
+  "delivery_paradigm": "ad",
+  "inputs": {
+    "constraints": {
+      "native_frame_rate_only": true,
+      "no_upconversion": true,
+      "no_upscaling": true,
+      "notes": "HD only — Media Group RTL Germany does not accept SD small items."
+    }
+  },
+  "assets": {
+    "video": {
+      "representation": "file",
+      "codec": {
+        "allowed": [
+          "xdcam_hd_422_50"
+        ],
+        "notes": "MPEG-2 422P@HL, 50 Mbit/s. Commercially XDCAM HD 422-50."
+      },
+      "container": {
+        "allowed": [
+          "mxf"
+        ],
+        "notes": "MXF OP 1a per SMPTE RDD9-2013 and SMPTE 378M."
+      },
+      "bitrate": {
+        "target": 50000000,
+        "mode": "constant"
+      },
+      "resolution": {
+        "allowed": [
+          "1920x1080"
+        ]
+      },
+      "aspect_ratio": {
+        "allowed": [
+          "16:9"
+        ]
+      },
+      "frame_rate": {
+        "mode": "fixed",
+        "allowed": [
+          "25"
+        ],
+        "tolerance": 0.01,
+        "notes": "1080i/25 native; 1080psF/25 accepted for original film material."
+      },
+      "scan_type": [
+        "interlaced",
+        "psf"
+      ],
+      "color": {
+        "primaries": [
+          "bt709"
+        ],
+        "transfer": [
+          "bt709"
+        ],
+        "matrix": [
+          "bt709"
+        ],
+        "range": [
+          "limited"
+        ],
+        "notes": "Video signal must conform to ITU-R BT.709-6 throughout the spot."
+      },
+      "bit_depth": {
+        "allowed": [
+          8
+        ],
+        "min": 8
+      },
+      "chroma_subsampling": [
+        "4:2:2"
+      ],
+      "signal": {
+        "interlace_mode": [
+          "true_interlace",
+          "psf"
+        ],
+        "field_order": [
+          "tff"
+        ],
+        "broadcast_system": "PAL/EBU",
+        "mains_frequency_hz": 50
+      },
+      "gop": {
+        "max_length": 12,
+        "notes": "XDCAM HD 422 is Long-GOP (M=3, N=12). Closed-GOP not explicitly required by spec."
+      },
+      "safe_area": {
+        "action_safe_required": true,
+        "action_safe_percent": 3.5,
+        "title_safe_required": false
+      }
+    },
+    "audio": {
+      "codec": {
+        "allowed": [
+          "pcm_s24le"
+        ],
+        "disallowed": [
+          "dolby_e"
+        ],
+        "notes": "PCM, discrete tracks (AES-3 / SMPTE 302M). Dolby E streams are explicitly not accepted."
+      },
+      "sample_rate": [
+        48000
+      ],
+      "bit_depth": {
+        "allowed": [
+          24
+        ],
+        "uniform_required": true
+      },
+      "track_count": {
+        "exact": 8,
+        "notes": "8 mono tracks, 1 channel per track. Unused tracks must carry AES-0 (digital mute)."
+      },
+      "language": {
+        "mode": "single"
+      },
+      "layout": {
+        "channel_map_required": true,
+        "allowed_layouts": [
+          "L-R",
+          "L-R-C-LFE-LS-RS"
+        ],
+        "tracks": [
+          { "track": 1, "role": "Stereo Mix L", "language": "Lang 1" },
+          { "track": 2, "role": "Stereo Mix R", "language": "Lang 1" },
+          { "track": 3, "role": "5.1 Mix FL",   "language": "Lang 1" },
+          { "track": 4, "role": "5.1 Mix FR",   "language": "Lang 1" },
+          { "track": 5, "role": "5.1 Mix C",    "language": "Lang 1" },
+          { "track": 6, "role": "5.1 Mix LFE",  "language": "Lang 1" },
+          { "track": 7, "role": "5.1 Mix SL",   "language": "Lang 1" },
+          { "track": 8, "role": "5.1 Mix SR",   "language": "Lang 1" }
+        ],
+        "notes": "At minimum tracks 1+2 must contain the complete programme sound (stereo or 2-track mono). Stereo must be mono-compatible (correlation ≥ 0). 5.1 multi-channel optional on tracks 3–8."
+      },
+      "loudness": {
+        "standards": [
+          {
+            "name": "EBU R128",
+            "target": -23.0,
+            "tolerance": 0.2,
+            "jurisdiction": "DE"
+          }
+        ],
+        "true_peak_max": -1.0,
+        "notes": "Per EBU Tech 3343 §10.1 (Commercials and Trailers). Maximum short-term loudness must not exceed -18 LUFS (+5 LU). EBU-mode loudness meter required (ITU-R BS.1770 K-weighting, 4× oversampled true-peak). PPM/QPPM meters are not suitable."
+      },
+      "sync": {
+        "must_match_video_duration": true
+      }
+    },
+    "metadata": {
+      "required": false,
+      "schemas": [
+        "EBU"
+      ],
+      "notes": "EBU recommendations binding where this spec is silent."
+    }
+  },
+  "structure": {
+    "type": "timeline",
+    "timeline": {
+      "timecode_start": "00:00:00:00",
+      "timecode_continuous": true,
+      "programme_layout": {
+        "program_start": "First frame — no technical credits, no black.",
+        "program_end": "Last frame, or 4 black frames with mute audio."
+      },
+      "notes": "Start timecode 00:00:00:00 at SOM (first picture), ascending linearly for the spot duration. All timecode tracks on a single medium must carry identical values."
+    }
+  },
+  "packaging": {
+    "type": "none",
+    "delivery": "web_upload",
+    "notes": "Online file transfer preferred via secure web interface at https://ingest.rtl-service.de/ingest-kleinmaterial/ (one-time free registration required)."
+  },
+  "constraints": {
+    "video": {
+      "signal_limits": {
+        "luminance": {
+          "min": 16,
+          "max": 235,
+          "tolerance_note": "Maximum luminance must not exceed 100% (700 mV). Pedestal 0–2%. No invalid signal levels per EBU R103. 8-bit limited range: 16–235."
+        },
+        "rgb": {
+          "min": 16,
+          "max": 235,
+          "tolerance_note": "EBU R103 / 'Video Range' compliance required throughout the spot."
+        }
+      }
+    },
+    "timing": {
+      "duration": {
+        "must_match": [
+          "video",
+          "audio"
+        ],
+        "tolerance_ms": 40
+      }
+    }
+  },
+  "delivery": {
+    "mode": "file_transfer",
+    "transport": {
+      "methods": [
+        "https"
+      ],
+      "providers": [
+        "RTL ingest portal"
+      ],
+      "contact_required_before_upload": false
+    }
+  },
+  "compliance": {
+    "contacts": [
+      {
+        "region": "DE",
+        "role": "Specifications support",
+        "email": "specifications@rtl.de",
+        "notes": "RTL Technology GmbH, Content Quality & Processing, Picassoplatz 1, 50679 Köln. Late deliveries: +49 221 456 422 20."
+      }
+    ]
+  },
+  "id": "rtl_smallitems_hd",
+  "name": "RTL (Germany) — Technical Specifications Small Items (HD)",
+  "governance": {
+    "spec_version": "November 2022",
+    "effective_date": "2022-11-01",
+    "supersedes": null,
+    "source": "Technical_Specifications_SmallItems_November_2022.pdf",
+    "jurisdiction": ["DE"],
+    "notes": "Media Group RTL Germany delivery spec for small items (commercials/spots/trailers). HD only via web upload. XDCAM HD 422 50 Mbps in MXF OP1a; 1080i/25 (or 25psF for film source); 8 PCM mono audio tracks at 48 kHz/24-bit (Stereo L/R + 5.1 FL/FR/C/LFE/SL/SR); EBU R128 -23 LUFS ±0.2 LU, true peak ≤ -1 dBTP; ITU-R BT.709-6; EBU R95 action safe 3.5%; SOM timecode 00:00:00:00. Latest version always at https://www.rtl-service.de/richtlinien.html."
+  }
+}
