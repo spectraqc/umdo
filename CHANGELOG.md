@@ -2,6 +2,21 @@
 
 All notable changes to the UMDO schema are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/) and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.2] — `content_type` closed enum
+
+### Added
+
+- Top-level `content_type` field with a closed enum: `program`, `commercial`, `promo`, `trailer`, `interstitial`, `music_video`. Drives per-content-type QC rules (loudness regime, caption requirements, PSE applicability, structure, peak limits).
+- News and sports deliberately excluded — pre-delivery QC of finished files of either is equivalent to `program`; the meaningful differences are all live-workflow concerns and live workflows are out of scope for UMDO.
+- Sub-genres of long-form (feature vs. episode vs. documentary) not modelled here — same delivery spec, belongs in separate metadata.
+- Aspect-ratio variants and technical artefact deliverables (slates, bars, test patterns) explicitly out of scope.
+- Example profiles updated: `clearcast_commercials` (`commercial`); `rte_hd`, `svt_hd`, `tg4_hd` (`program`). `rtl_smallitems_hd` left unmarked since the spec spans commercials/promos/trailers.
+
+### Notes
+
+- Backwards compatible — `content_type` is optional. Profiles without it remain valid.
+- American English (`program`) for the token; British spelling free in human-facing prose.
+
 ## [0.7.1] — Provenance fields
 
 ### Added
