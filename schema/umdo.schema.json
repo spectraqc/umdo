@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://umdo.org/schema/0.7.0/umdo.schema.json",
+  "$id": "https://umdo.org/schema/0.7.1/umdo.schema.json",
   "title": "Universal Media Delivery Ontology",
   "description": "Machine-readable schema for broadcast, OTT, cinema and ad-delivery technical specifications. UMDO is extension-friendly: every object accepts additional properties so vendors and broadcasters can add their own fields and propose them upstream.",
   "type": "object",
-  "$comment": "UMDO 0.7.0 — schema version is independent of any individual profile's spec_version (governance.spec_version).",
+  "$comment": "UMDO 0.7.1 — schema version is independent of any individual profile's spec_version (governance.spec_version).",
   "required": ["id", "name", "delivery_paradigm"],
   "additionalProperties": true,
   "properties": {
@@ -59,6 +59,16 @@
         "effective_date": { "type": "string", "format": "date" },
         "supersedes": { "type": ["string", "null"] },
         "source": { "type": "string" },
+        "sourceSpec": {
+          "type": "string",
+          "format": "uri",
+          "description": "Direct URL to the source delivery specification this profile was encoded from. Added in 0.7.1 for provenance auditing."
+        },
+        "sourceAccess": {
+          "type": "string",
+          "enum": ["public", "portal-login", "contracted", "unknown"],
+          "description": "Access category of sourceSpec. 'public' = openly published; 'portal-login' = behind a free login (e.g. Netflix Partner Help Center); 'contracted' = available only under a production agreement; 'unknown' = legacy profile encoded before this rule existed. Added in 0.7.1."
+        },
         "jurisdiction": {
           "type": "array",
           "items": { "type": "string" },

@@ -4,8 +4,30 @@ UMDO is an open, machine-readable schema for broadcast, OTT, cinema, and ad-deli
 
 It lets a broadcaster, studio, post house, or QC vendor encode "what does this delivery need to look like" — codecs, containers, color, loudness, timecode, packaging, compliance — as a single JSON document that any tool can read.
 
-**Schema version:** `0.7.0`
+**Schema version:** `0.7.1`
 **Spec licence:** [CC BY 4.0](LICENSE) · **Tooling licence:** [MIT](LICENSE-MIT)
+
+---
+
+## Independence
+
+UMDO is an independent open-source project. It is **not affiliated with, endorsed by, or sponsored by any of the broadcasters, studios, distributors, or platforms whose delivery requirements are encoded as profiles in this repository.** Organisation names, trademarks, and identifiers appear in profile filenames and `name`/`source` fields as descriptive metadata only — to identify *which* set of delivery facts a profile encodes, not to suggest endorsement of UMDO by that organisation.
+
+If you are an authoritative representative of an organisation profiled here and want to either take maintainership of your own profile or have it removed, see [Takedown contact](#takedown-contact) below.
+
+## Takedown contact
+
+Email: `<TODO: takedown email>` (placeholder — to be replaced with a real address before public launch).
+
+If you are authoritatively representing an organisation profiled in this repository and wish to:
+
+- **Correct** a profile — open a PR or issue, or contact the address above; we will fast-track corrections from the originating organisation.
+- **Take maintainership** of the profile for your organisation — contact the address above; we can route community PRs through you for review.
+- **Have the profile removed** — contact the address above with verification of authority. Our target response window is **5 business days**.
+
+Removed profiles are added to a takedown register. Contributors are asked not to re-submit profiles that have been removed in response to a takedown request — see [CONTRIBUTING.md § Takedown](CONTRIBUTING.md#takedown).
+
+UMDO encodes **technical facts** about delivery requirements (codec names, loudness thresholds, file structure conventions). It does not host the source documents themselves, copy their wording, or reproduce their layout — see the [original wording rule](CONTRIBUTING.md#original-wording-rule).
 
 ---
 
@@ -87,7 +109,7 @@ CI runs `tools/validate.py` on every PR. Profiles must validate against the publ
 
 ## Versioning
 
-UMDO follows semantic versioning of the schema document. The current version is **0.7.0**.
+UMDO follows semantic versioning of the schema document. The current version is **0.7.1**.
 
 - **Patch** — clarifications, doc fixes, new profiles. Always backwards-compatible.
 - **Minor** — new optional fields, new enum values, relaxed constraints.
@@ -99,7 +121,7 @@ A profile's own `governance.spec_version` is the version of the **delivery spec 
 
 ## Status
 
-UMDO 0.7.0 covers the fields needed by every public-broadcaster, OTT-mezzanine, and ad-clearance spec we have profiled so far. It is `additionalProperties: true` throughout — vendors can add their own extension fields and propose them upstream as the ecosystem stabilises.
+UMDO 0.7.1 covers the fields needed by every public-broadcaster, OTT-mezzanine, and ad-clearance spec we have profiled so far. It is `additionalProperties: true` throughout — vendors can add their own extension fields and propose them upstream as the ecosystem stabilises.
 
 See [docs/gaps.md](docs/gaps.md) for known limitations and the proposal queue.
 
