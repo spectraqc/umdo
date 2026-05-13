@@ -2,6 +2,19 @@
 
 All notable changes to the UMDO schema are recorded here. The format follows [Keep a Changelog](https://keepachangelog.com/) and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.7.1] — Provenance fields
+
+### Added
+
+- `governance.sourceSpec` — direct URL to the source delivery specification the profile was encoded from. Optional in 0.7.1; intended to become required at 1.0 once the back-catalogue is populated.
+- `governance.sourceAccess` — access category of `sourceSpec`. Enum: `public` (openly published), `portal-login` (behind a free login), `contracted` (available only under a production agreement), `unknown` (legacy profile encoded before this rule existed). Optional in 0.7.1.
+- Example profiles updated with the new fields where known: `clearcast_commercials` (`portal-login`), `rte_hd` (`contracted`), `rtl_smallitems_hd` (`public` + URL).
+
+### Notes
+
+- Backwards compatible — existing profiles without the new fields continue to validate.
+- See the UMDO legal & contribution policy for the rationale behind the new fields.
+
 ## [0.7.0] — Initial public release
 
 First public release of UMDO as a standalone project.

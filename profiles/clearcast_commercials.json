@@ -178,6 +178,7 @@
     "effective_date": "2024-01-01",
     "supersedes": null,
     "source": "Clearcast Library Technical Specification Guide v1.6",
+    "sourceAccess": "portal-login",
     "jurisdiction": [
       "GB",
       "IE"
