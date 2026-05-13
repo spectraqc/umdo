@@ -1,5 +1,6 @@
 {
   "delivery_paradigm": "file",
+  "content_type": "program",
   "inputs": {
     "constraints": {
       "native_frame_rate_only": true,

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://umdo.org/schema/0.7.1/umdo.schema.json",
+  "$id": "https://umdo.org/schema/0.7.2/umdo.schema.json",
   "title": "Universal Media Delivery Ontology",
   "description": "Machine-readable schema for broadcast, OTT, cinema and ad-delivery technical specifications. UMDO is extension-friendly: every object accepts additional properties so vendors and broadcasters can add their own fields and propose them upstream.",
   "type": "object",
-  "$comment": "UMDO 0.7.1 — schema version is independent of any individual profile's spec_version (governance.spec_version).",
+  "$comment": "UMDO 0.7.2 — schema version is independent of any individual profile's spec_version (governance.spec_version).",
   "required": ["id", "name", "delivery_paradigm"],
   "additionalProperties": true,
   "properties": {
@@ -21,6 +21,7 @@
     },
     "governance": { "$ref": "#/$defs/governance" },
     "delivery_paradigm": { "$ref": "#/$defs/delivery_paradigm" },
+    "content_type": { "$ref": "#/$defs/content_type" },
     "inputs": { "$ref": "#/$defs/inputs" },
     "assets": { "$ref": "#/$defs/assets" },
     "structure": { "$ref": "#/$defs/structure" },
@@ -82,6 +83,13 @@
       "description": "High-level delivery model. Open enum: known values are listed but custom values are accepted for new paradigms.",
       "type": "string",
       "examples": ["file", "package", "ad", "cinema", "live", "imf", "dcp"]
+    },
+
+    "content_type": {
+      "description": "Type of the finished, file-based deliverable. Closed enum — scope is limited to distinctions that drive different pre-delivery QC spec rules (loudness regime, captions, PSE, structure, peak limits). Live-workflow content is out of scope; UMDO encodes specs for finished file deliverables only. American English token spelling (`program`, not `programme`) follows JSON Schema / SMPTE / EBUCore convention for machine-readable identifiers.",
+      "type": "string",
+      "enum": ["program", "commercial", "promo", "trailer", "interstitial", "music_video"],
+      "$comment": "Per-value notes: 'program' = long-form finished content (features, episodes, documentaries, specials); program loudness target, captions required, PSE tested, may have act structure with black/bumpers. 'commercial' = paid advertising spot; ad-specific loudness (CALM/EBU ad rules), short duration, no act structure, stricter true-peak. 'promo' = channel/network/platform self-promotion; ad-style loudness rules but tracked separately for rights/scheduling metadata. 'trailer' = theatrical or streaming trailer; distinct loudness ceiling (TASA for cinema, platform-specific for streaming), higher peak allowance than program. 'interstitial' = bumpers, idents, fillers, station IDs; very short, often no caption requirement, technical/transitional role. 'music_video' = music-led short-form; less aggressive normalization tolerated, music-specific metadata, captions often optional. News and sports are deliberately out of scope: pre-delivery QC of finished news/sports files is equivalent to 'program' — the meaningful differences are all live-workflow concerns."
     },
 
     "inputs": {

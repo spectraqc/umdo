@@ -1,5 +1,6 @@
 {
   "delivery_paradigm": "file",
+  "content_type": "commercial",
   "inputs": {
     "constraints": {
       "native_frame_rate_only": true,
